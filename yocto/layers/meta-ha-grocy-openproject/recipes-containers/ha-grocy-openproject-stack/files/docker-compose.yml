@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  grocy:
+    image: lscr.io/linuxserver/grocy:${GROCY_IMAGE_TAG}
+    container_name: grocy
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - /var/lib/ha-grocy-openproject/grocy:/config
+    ports:
+      - "${GROCY_PORT}:80"
+
+  openproject:
+    image: openproject/openproject:${OPENPROJECT_IMAGE_TAG}
+    container_name: openproject
+    restart: unless-stopped
+    environment:
+      - OPENPROJECT_HTTPS=${OPENPROJECT_HTTPS}
+      - OPENPROJECT_HOST__NAME=${OPENPROJECT_HOST_NAME}
+      - OPENPROJECT_SECRET_KEY_BASE=${OPENPROJECT_SECRET_KEY_BASE}
+      - OPENPROJECT_DB_ADAPTER=sqlite3
+    volumes:
+      - /var/lib/ha-grocy-openproject/openproject:/var/openproject/assets
+    ports:
+      - "${OPENPROJECT_PORT}:80"

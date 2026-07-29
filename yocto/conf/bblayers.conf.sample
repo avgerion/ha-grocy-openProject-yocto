@@ -1,0 +1,14 @@
+# Example bblayers.conf skeleton
+# Replace <YOCTO_ROOT> with your path.
+
+BBLAYERS ?= " \
+  <YOCTO_ROOT>/poky/meta \
+  <YOCTO_ROOT>/poky/meta-poky \
+  <YOCTO_ROOT>/poky/meta-yocto-bsp \
+  <YOCTO_ROOT>/meta-openembedded/meta-oe \
+  <YOCTO_ROOT>/meta-openembedded/meta-python \
+  <YOCTO_ROOT>/meta-openembedded/meta-networking \
+  <YOCTO_ROOT>/meta-raspberrypi \
+  <YOCTO_ROOT>/meta-virtualization \
+  <YOCTO_ROOT>/ha-grocy-openProject-yocto/yocto/layers/meta-ha-grocy-openproject \
+"

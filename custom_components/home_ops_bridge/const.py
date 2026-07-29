@@ -1,0 +1,12 @@
+"""Constants for Home Ops Bridge."""
+
+DOMAIN = "home_ops_bridge"
+
+CONF_GROCY_URL = "grocy_url"
+CONF_OPENPROJECT_URL = "openproject_url"
+CONF_API_TOKEN = "api_token"
+
+DEFAULT_GROCY_PORT = 9283
+DEFAULT_OPENPROJECT_PORT = 8080
+DEFAULT_SCAN_INTERVAL_SECONDS = 60
+DEFAULT_REQUEST_TIMEOUT_SECONDS = 10

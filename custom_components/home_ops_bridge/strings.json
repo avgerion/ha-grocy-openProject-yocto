@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Home Ops Bridge",
+        "description": "Configure and validate Grocy/OpenProject endpoints",
+        "data": {
+          "grocy_url": "Grocy URL",
+          "openproject_url": "OpenProject URL",
+          "api_token": "Grocy API token (optional)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to Grocy and OpenProject. Check URLs and network access.",
+      "invalid_url": "One or more URLs are invalid."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Home Ops Bridge options",
+        "data": {
+          "grocy_url": "Grocy URL",
+          "openproject_url": "OpenProject URL",
+          "api_token": "Grocy API token (optional)"
+        }
+      }
+    }
+  }
+}
