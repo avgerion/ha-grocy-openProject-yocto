@@ -1,10 +1,15 @@
-# Example local.conf skeleton
+# Example local.conf for Raspberry Pi
+# Raspberry Pi 4 (64-bit): raspberrypi4-64
+# Raspberry Pi 3 (64-bit): raspberrypi3-64
 MACHINE ??= "raspberrypi4-64"
-DISTRO_FEATURES:append = " virtualization systemd"
-VIRTUAL-RUNTIME_init_manager = "systemd"
-ENABLE_UART = "1"
 
-# Optional image features for debugging/administration
+DISTRO_FEATURES:append = " systemd virtualization"
+VIRTUAL-RUNTIME_init_manager = "systemd"
+
+# Docker runtime compatibility
+KERNEL_FEATURES:append = " features/overlayfs/overlayfs.scc"
+
+ENABLE_UART = "1"
 EXTRA_IMAGE_FEATURES ?= "ssh-server-openssh"
 
 # Set package format as needed

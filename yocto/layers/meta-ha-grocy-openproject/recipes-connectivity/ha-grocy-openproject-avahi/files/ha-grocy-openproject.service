@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+
+<service-group>
+  <name replace-wildcards="yes">%h-ha-grocy-openproject</name>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>9283</port>
+    <txt-record>service=grocy</txt-record>
+  </service>
+
+  <service>
+    <type>_http._tcp</type>
+    <port>8080</port>
+    <txt-record>service=openproject</txt-record>
+  </service>
+</service-group>

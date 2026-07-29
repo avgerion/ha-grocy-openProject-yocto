@@ -1,47 +1,99 @@
 # ha-grocy-openProject-yocto
 
-Yocto-based Raspberry Pi 3/4 image skeleton that targets:
+Yocto-based Raspberry Pi 3/4 image implementation that provides:
 
-- Docker runtime
-- Grocy server
-- OpenProject server
-- Easy onboarding with Home Assistant
+- Docker runtime on Raspberry Pi
+- Grocy container service
+- OpenProject container service
+- Bonjour/mDNS service announcements for easier Home Assistant onboarding
+- Home Assistant custom integration to configure and monitor both services
 
-This repository is structured so the **Home Assistant custom integration remains at repository root** and **Yocto lives in a subdirectory** (`yocto/`), as required by Home Assistant integration conventions.
+The repository layout keeps **Home Assistant integration files at root** and **Yocto assets in `/yocto`**, which is required for custom integration compatibility.
 
 ## Repository layout
 
-- `/custom_components/home_ops_bridge/` - Home Assistant custom integration skeleton
-- `/yocto/` - Yocto build skeleton (configs, layer, image recipe)
+- `/custom_components/home_ops_bridge/` - Home Assistant integration (config flow + zeroconf + status sensors)
+- `/yocto/` - Yocto config samples and custom layer for the stack
 
-## Quick start (skeleton)
+## Yocto implementation details
 
-> This is a starter scaffold, not a fully production-ready build.
+### Included Yocto layer
 
-1. Install Yocto build prerequisites on your Linux host.
-2. Add required upstream layers (for example `poky`, `meta-openembedded`, `meta-raspberrypi`, `meta-virtualization`).
-3. Copy sample configs:
-   - `yocto/conf/bblayers.conf.sample` -> your build `conf/bblayers.conf`
-   - `yocto/conf/local.conf.sample` -> your build `conf/local.conf`
-4. Add `meta-ha-grocy-openproject` layer from this repository.
-5. Build image:
+`yocto/layers/meta-ha-grocy-openproject` provides:
 
-   ```bash
-   bitbake ha-grocy-openproject-image
-   ```
+- `ha-grocy-openproject-image.bb` image recipe
+- `ha-grocy-openproject-stack` recipe:
+  - installs Docker Compose stack file
+  - installs environment config file
+  - installs/auto-enables systemd service to start containers at boot
+- `ha-grocy-openproject-avahi` recipe:
+  - installs Avahi service announcement file
 
-## Home Assistant connectivity approach
+### Runtime files installed by the stack recipe
 
-The included `home_ops_bridge` integration skeleton is designed to evolve toward:
+- `/usr/share/ha-grocy-openproject/docker-compose.yml`
+- `/etc/ha-grocy-openproject/ha-grocy-openproject.env`
+- `ha-grocy-openproject.service` (systemd)
 
-- mDNS/Bonjour (zeroconf) discovery of the Raspberry Pi service endpoint
-- Config flow for Grocy/OpenProject URLs and API credentials
-- Single integration entry in Home Assistant to connect both services
+Edit `/etc/ha-grocy-openproject/ha-grocy-openproject.env` on device to customize:
 
-The Yocto image scaffold includes `avahi-daemon` so device/service discovery can be enabled in future iterations.
+- Grocy/OpenProject ports
+- image tags
+- timezone
+- OpenProject hostname
+- OpenProject secret key
 
-## Next implementation steps
+## Build instructions
 
-- Add concrete Grocy/OpenProject service containers/systemd units in Yocto layer
-- Add integration API clients and entity/platform implementations
-- Add secure credential storage and diagnostics
+1. Install Yocto prerequisites on Linux host.
+2. Fetch layers (`poky`, `meta-openembedded`, `meta-raspberrypi`, `meta-virtualization`).
+3. Add this repository layer path to your build setup using:
+   - `yocto/conf/bblayers.conf.sample`
+   - `yocto/conf/local.conf.sample`
+4. Build:
+
+```bash
+bitbake ha-grocy-openproject-image
+```
+
+## First boot behavior
+
+On first boot, the image:
+
+- starts Docker
+- starts `ha-grocy-openproject.service`
+- launches Grocy and OpenProject containers
+- announces `*_ha-grocy-openproject*` over mDNS/Bonjour using Avahi
+
+Default HTTP endpoints:
+
+- Grocy: `http://<device-hostname-or-ip>:9283`
+- OpenProject: `http://<device-hostname-or-ip>:8080`
+
+## Home Assistant integration
+
+Integration domain: `home_ops_bridge`
+
+Features implemented:
+
+- Config flow for Grocy URL, OpenProject URL, optional Grocy API token
+- Zeroconf bootstrap (pre-fills discovered host)
+- Connectivity validation against:
+  - `GET <grocy_url>/api/system/info`
+  - `GET <openproject_url>/api/v3`
+- Diagnostic sensors:
+  - Grocy endpoint status
+  - OpenProject endpoint status
+  - Overall bridge status
+
+### Install integration in Home Assistant
+
+1. Copy `/custom_components/home_ops_bridge` into your Home Assistant `custom_components` directory.
+2. Restart Home Assistant.
+3. Add **Home Ops Bridge** from Integrations.
+4. Confirm detected or manual URLs for Grocy/OpenProject.
+
+## Notes
+
+- This implementation is intended for local/home-lab networks.
+- Replace `OPENPROJECT_SECRET_KEY_BASE` in the env file before production use.

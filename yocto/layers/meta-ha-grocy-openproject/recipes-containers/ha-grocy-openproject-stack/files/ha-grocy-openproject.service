@@ -1,0 +1,16 @@
+[Unit]
+Description=Grocy + OpenProject container stack
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+EnvironmentFile=/etc/ha-grocy-openproject/ha-grocy-openproject.env
+ExecStart=/usr/bin/docker compose --env-file /etc/ha-grocy-openproject/ha-grocy-openproject.env -f /usr/share/ha-grocy-openproject/docker-compose.yml up -d
+ExecStop=/usr/bin/docker compose --env-file /etc/ha-grocy-openproject/ha-grocy-openproject.env -f /usr/share/ha-grocy-openproject/docker-compose.yml down
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
