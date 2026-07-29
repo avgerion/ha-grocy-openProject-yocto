@@ -1,0 +1,22 @@
+{
+  "domain": "home_ops_bridge",
+  "name": "Home Ops Bridge",
+  "codeowners": [
+    "@avgerion"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/avgerion/ha-grocy-openProject-yocto",
+  "integration_type": "service",
+  "iot_class": "local_polling",
+  "loggers": [
+    "custom_components.home_ops_bridge"
+  ],
+  "requirements": [],
+  "version": "0.1.0",
+  "zeroconf": [
+    {
+      "type": "_http._tcp.local.",
+      "name": "*ha-grocy-openproject*"
+    }
+  ]
+}

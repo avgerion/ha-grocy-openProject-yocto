@@ -1,0 +1,11 @@
+# Example local.conf skeleton
+MACHINE ??= "raspberrypi4-64"
+DISTRO_FEATURES:append = " virtualization systemd"
+VIRTUAL-RUNTIME_init_manager = "systemd"
+ENABLE_UART = "1"
+
+# Optional image features for debugging/administration
+EXTRA_IMAGE_FEATURES ?= "ssh-server-openssh"
+
+# Set package format as needed
+PACKAGE_CLASSES ?= "package_rpm"
