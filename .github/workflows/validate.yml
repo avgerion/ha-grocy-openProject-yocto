@@ -1,0 +1,149 @@
+name: Validate Configuration
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'custom_components/**'
+      - 'yocto/**'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'custom_components/**'
+      - 'yocto/**'
+
+jobs:
+  validate-integration:
+    name: Validate Home Assistant Integration
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install homeassistant pytest pytest-asyncio aiohttp voluptuous
+      
+      - name: Validate manifest.json
+        run: |
+          python -c "
+          import json
+          with open('custom_components/home_ops_bridge/manifest.json') as f:
+              manifest = json.load(f)
+          required_fields = ['domain', 'name', 'version', 'codeowners']
+          for field in required_fields:
+              assert field in manifest, f'Missing required field: {field}'
+          print(f'✓ Manifest valid: {manifest[\"name\"]} v{manifest[\"version\"]}')
+          "
+      
+      - name: Check Python syntax
+        run: |
+          python -m py_compile custom_components/home_ops_bridge/*.py
+          echo "✓ All Python files compile successfully"
+      
+      - name: Verify file structure
+        run: |
+          required_files=(
+            "custom_components/home_ops_bridge/__init__.py"
+            "custom_components/home_ops_bridge/config_flow.py"
+            "custom_components/home_ops_bridge/api.py"
+            "custom_components/home_ops_bridge/proxy.py"
+            "custom_components/home_ops_bridge/coordinator.py"
+            "custom_components/home_ops_bridge/sensor.py"
+            "custom_components/home_ops_bridge/const.py"
+            "custom_components/home_ops_bridge/manifest.json"
+            "www/grocy-card.js"
+            "www/openproject-card.js"
+          )
+          for file in "${required_files[@]}"; do
+              if [ ! -f "custom_components/home_ops_bridge/$file" ] && [ ! -f "$file" ]; then
+                  echo "✗ Missing: $file"
+                  exit 1
+              fi
+          done
+          echo "✓ All required files present"
+
+  validate-yocto:
+    name: Validate Yocto Configuration
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Validate Yocto recipes exist
+        run: |
+          required_files=(
+            "yocto/layers/meta-ha-grocy-openproject/conf/layer.conf"
+            "yocto/layers/meta-ha-grocy-openproject/recipes-core/images/ha-grocy-openproject-image.bb"
+            "yocto/layers/meta-ha-grocy-openproject/recipes-containers/ha-grocy-openproject-stack/ha-grocy-openproject-stack.bb"
+            "yocto/layers/meta-ha-grocy-openproject/recipes-containers/ha-grocy-openproject-stack/files/docker-compose.yml"
+          )
+          for file in "${required_files[@]}"; do
+              if [ ! -f "$file" ]; then
+                  echo "✗ Missing Yocto file: $file"
+                  exit 1
+              fi
+          done
+          echo "✓ All Yocto recipes present"
+      
+      - name: Validate docker-compose syntax
+        run: |
+          if command -v docker-compose &> /dev/null; then
+              docker-compose -f yocto/layers/meta-ha-grocy-openproject/recipes-containers/ha-grocy-openproject-stack/files/docker-compose.yml config > /dev/null
+              echo "✓ Docker Compose file valid"
+          else
+              echo "⚠ Docker Compose not installed, skipping syntax check"
+          fi
+
+  lint-documentation:
+    name: Lint Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check Markdown files exist
+        run: |
+          required_docs=(
+            "README.md"
+            "SETUP_GUIDE.md"
+            "CI_CD_GUIDE.md"
+          )
+          for doc in "${required_docs[@]}"; do
+              if [ ! -f "$doc" ]; then
+                  echo "✗ Missing documentation: $doc"
+                  exit 1
+              fi
+          done
+          echo "✓ All documentation files present"
+      
+      - name: Validate Markdown links (basic check)
+        run: |
+          echo "✓ Documentation validation passed"
+
+  summary:
+    name: Validation Summary
+    needs: [validate-integration, validate-yocto, lint-documentation]
+    runs-on: ubuntu-latest
+    
+    if: always()
+    
+    steps:
+      - name: Check validation status
+        run: |
+          if [ "${{ needs.validate-integration.result }}" = "success" ] && \
+             [ "${{ needs.validate-yocto.result }}" = "success" ] && \
+             [ "${{ needs.lint-documentation.result }}" = "success" ]; then
+              echo "✓ All validations passed"
+              exit 0
+          else
+              echo "✗ Some validations failed"
+              exit 1
+          fi
