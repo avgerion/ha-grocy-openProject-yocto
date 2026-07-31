@@ -1,0 +1,83 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get tag version
+        id: tag
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Creating release for tag: ${VERSION}"
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.version }}
+          release_name: Home Ops Bridge ${{ steps.tag.outputs.version }}
+          body: |
+            # Home Ops Bridge ${{ steps.tag.outputs.version }}
+
+            Home Assistant integration for Grocy and OpenProject management.
+
+            ## Changes
+
+            See [CHANGELOG](CHANGELOG.md) for details or check git history for this release.
+
+            ## Installation
+
+            ### Via HACS (Recommended)
+            1. Open Home Assistant
+            2. Go to Settings → Devices & Services → Custom Repositories
+            3. Add: `https://github.com/avgerion/ha-grocy-openProject-yocto` as Integration
+            4. Open HACS → Integrations
+            5. Search for and install Home Ops Bridge
+            6. Restart Home Assistant
+            7. Add the integration from Settings → Devices & Services
+
+            ### Manual Installation
+            1. Copy `/custom_components/home_ops_bridge` to your Home Assistant `custom_components` folder
+            2. Restart Home Assistant
+            3. Add the integration from Settings → Devices & Services
+
+            ## Documentation
+
+            - [README](README.md) - Project overview
+            - [SETUP_GUIDE](SETUP_GUIDE.md) - How to set up proxy for public access
+            - [LOCAL_RUNNER_SETUP](LOCAL_RUNNER_SETUP.md) - How to build Yocto image locally
+            - [CI_CD_GUIDE](CI_CD_GUIDE.md) - CI/CD setup options
+
+            ## Features
+
+            - Configuration flow for Grocy and OpenProject URLs
+            - Zeroconf discovery for automatic setup
+            - Health monitoring sensors
+            - Public proxy access via Home Assistant authentication
+            - Custom Lovelace cards for embedded iframe access
+
+            ## Support
+
+            For issues or questions:
+            1. Check [README.md](README.md)
+            2. Check [SETUP_GUIDE.md](SETUP_GUIDE.md)
+            3. Open an issue on [GitHub](https://github.com/avgerion/ha-grocy-openProject-yocto/issues)
+          draft: false
+          prerelease: false
+
+      - name: Verify Release Created
+        run: |
+          echo "✓ Release created successfully for tag: ${{ steps.tag.outputs.version }}"

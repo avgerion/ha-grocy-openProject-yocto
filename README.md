@@ -15,10 +15,12 @@ The repository layout keeps **Home Assistant integration files at root** and **Y
 
 ### For Home Assistant Users
 
-1. **Install the integration:**
-   - Copy `/custom_components/home_ops_bridge` to your HA `custom_components` directory
+1. **Install the integration via HACS (Recommended):**
+   - Go to **Settings → Devices & Services → Custom Repositories**
+   - Add: `https://github.com/avgerion/ha-grocy-openProject-yocto` as **Integration**
+   - In **HACS → Integrations**, search for and install **Home Ops Bridge**
    - Restart Home Assistant
-   - Add integration from Settings → Devices & Services
+   - Add integration from **Settings → Devices & Services**
 
 2. **Access remotely with embedded iframes:**
    - Follow the [Setup Guide](SETUP_GUIDE.md) for iframe proxy setup
@@ -27,9 +29,10 @@ The repository layout keeps **Home Assistant integration files at root** and **Y
 
 ### For Yocto Builders
 
-1. **Build the image:**
-   - Follow Yocto setup instructions below
-   - Run `bitbake ha-grocy-openproject-image`
+1. **Build the image locally:**
+   - See [Local Runner Setup Guide](LOCAL_RUNNER_SETUP.md) for detailed instructions
+   - Requires Linux or WSL with 100+ GB disk space
+   - Typical build time: 1-4 hours depending on hardware
 
 2. **Handle CI/CD:**
    - See [CI/CD Guide](CI_CD_GUIDE.md) for free tier options
@@ -92,20 +95,22 @@ Edit `/etc/ha-grocy-openproject/ha-grocy-openproject.env` on device to customize
 - OpenProject hostname
 - OpenProject secret key
 
-## Build Instructions
+## Building the Yocto Image
 
-1. Install Yocto prerequisites on Linux host.
-2. Fetch layers (`poky`, `meta-openembedded`, `meta-raspberrypi`, `meta-virtualization`).
-3. Add this repository layer path to your build setup using:
-   - `yocto/conf/bblayers.conf.sample`
-   - `yocto/conf/local.conf.sample`
-4. Build:
+Complete build instructions for local and CI/CD environments are available in:
 
-```bash
-bitbake ha-grocy-openproject-image
-```
+- **[LOCAL_RUNNER_SETUP.md](LOCAL_RUNNER_SETUP.md)** - Step-by-step guide for building locally on WSL or Linux
+- **[CI_CD_GUIDE.md](CI_CD_GUIDE.md)** - Using GitHub Actions or self-hosted runners
 
-See [CI/CD Guide](CI_CD_GUIDE.md) for information about using GitHub Actions (free tier) or self-hosted runners.
+Quick overview:
+
+1. Install Yocto build dependencies on Linux or WSL
+2. Fetch Yocto layers (poky, meta-openembedded, meta-raspberrypi, meta-virtualization)
+3. Add this repository's layer path to your Yocto configuration
+4. Run `bitbake ha-grocy-openproject-image`
+
+**Disk Space Required**: 100+ GB free space
+**Build Time**: 1-4 hours depending on hardware
 
 ## First Boot Behavior
 
@@ -125,12 +130,33 @@ Default HTTP endpoints:
 
 Integration domain: `home_ops_bridge`
 
-### Install Integration
+### Install Integration (Recommended: HACS)
 
-1. Copy `/custom_components/home_ops_bridge` into your Home Assistant `custom_components` directory.
-2. Restart Home Assistant.
-3. Add **Home Ops Bridge** from Integrations.
-4. Confirm detected or manual URLs for Grocy/OpenProject.
+**Option 1: Install via HACS (Recommended)**
+
+1. Open Home Assistant and go to **Settings → Devices & Services → Custom Repositories**
+2. Add this repository: `https://github.com/avgerion/ha-grocy-openProject-yocto`
+3. Select **Integration** as the category
+4. Click **Create Repository**
+5. Go to **HACS → Integrations**
+6. Search for **Home Ops Bridge**
+7. Click **Install**
+8. Restart Home Assistant
+9. Add **Home Ops Bridge** from **Settings → Devices & Services → Integrations**
+10. Confirm detected or manual URLs for Grocy/OpenProject
+
+**Option 2: Manual Installation**
+
+1. Copy `/custom_components/home_ops_bridge` into your Home Assistant `custom_components` directory
+2. Restart Home Assistant
+3. Add **Home Ops Bridge** from **Settings → Devices & Services → Integrations**
+4. Confirm detected or manual URLs for Grocy/OpenProject
+
+**HACS Benefits:**
+- ✅ Automatic updates when new versions are released
+- ✅ Version tracking and rollback support
+- ✅ One-click installation and removal
+- ✅ Integration appears in HACS dashboard
 
 ### Public Access via Proxy
 
@@ -155,6 +181,7 @@ See [Setup Guide](SETUP_GUIDE.md) for detailed instructions.
 ## Documentation
 
 - **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - How to set up and use the proxy for public access
+- **[LOCAL_RUNNER_SETUP.md](LOCAL_RUNNER_SETUP.md)** - Complete guide to build the Yocto image locally on WSL or Linux (free tier)
 - **[CI_CD_GUIDE.md](CI_CD_GUIDE.md)** - GitHub Actions and CI/CD options (free tier and beyond)
 - **[README.md](README.md)** - This file
 

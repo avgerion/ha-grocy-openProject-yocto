@@ -2,6 +2,8 @@
 
 This guide explains how to set up automated Yocto image builds for the Raspberry Pi, what's available on the free tier, and costs.
 
+**For detailed local build instructions, see:** [LOCAL_RUNNER_SETUP.md](LOCAL_RUNNER_SETUP.md)
+
 ## GitHub Actions Free Tier
 
 ### What You Get for Free
@@ -36,8 +38,12 @@ This guide explains how to set up automated Yocto image builds for the Raspberry
 
 **Best for:** Most users who build infrequently
 
+**For complete step-by-step build instructions, see:** [LOCAL_RUNNER_SETUP.md](LOCAL_RUNNER_SETUP.md)
+
+Quick workflow:
+
 ```bash
-# Build on your machine
+# Build on your machine (see LOCAL_RUNNER_SETUP.md for detailed setup)
 bitbake ha-grocy-openproject-image
 
 # Create release
@@ -45,7 +51,7 @@ git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 
 # Upload to GitHub Releases
-gh release upload v1.0.0 build/deploy-images/ha-grocy-openproject-image-*.*.rootfs.rpi-sdimg.xz
+gh release upload v1.0.0 build/tmp/deploy/images/raspberrypi4/ha-grocy-openproject-image-*.wic.bz2
 ```
 
 **Pros:**
@@ -55,7 +61,7 @@ gh release upload v1.0.0 build/deploy-images/ha-grocy-openproject-image-*.*.root
 - No GitHub limits
 
 **Cons:**
-- Requires Yocto setup on your machine
+- Requires Yocto setup on your machine (see [LOCAL_RUNNER_SETUP.md](LOCAL_RUNNER_SETUP.md))
 - Manual upload steps
 
 ### Option 2: GitHub Releases (Free Artifact Hosting)
