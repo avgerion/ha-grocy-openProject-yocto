@@ -114,6 +114,7 @@ jobs:
           required_docs=(
             "README.md"
             "SETUP_GUIDE.md"
+            "LOCAL_RUNNER_SETUP.md"
             "CI_CD_GUIDE.md"
           )
           for doc in "${required_docs[@]}"; do

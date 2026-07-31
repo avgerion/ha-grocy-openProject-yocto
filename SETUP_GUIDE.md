@@ -32,12 +32,30 @@ Grocy/OpenProject Containers (internal network)
 ## Prerequisites
 
 - Home Assistant instance with public HTTPS access
-- Home Ops Bridge integration installed and configured
+- **Home Ops Bridge integration** installed via:
+  - **HACS (Recommended)**: See [README.md](README.md) for HACS installation instructions
+  - **Manual**: Copy `/custom_components/home_ops_bridge` to your `custom_components` directory
 - User logged into Home Assistant
 
 ## Setup Instructions
 
 ### 1. Install the Home Ops Bridge Integration
+
+**Option 1: Via HACS (Recommended)**
+
+1. Open Home Assistant → **Settings → Devices & Services → Custom Repositories**
+2. Add: `https://github.com/avgerion/ha-grocy-openProject-yocto` as **Integration**
+3. Click **HACS → Integrations**
+4. Search for **Home Ops Bridge**
+5. Click **Install**
+6. Restart Home Assistant
+7. Go to **Settings → Devices & Services → Integrations**
+8. Click **Create Automation**
+9. Search for **Home Ops Bridge**
+10. Enter your Grocy and OpenProject URLs
+11. Confirm
+
+**Option 2: Manual Installation**
 
 Follow the standard installation in your Home Assistant instance:
 
