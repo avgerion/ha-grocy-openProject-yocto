@@ -7,7 +7,6 @@ IMAGE_FEATURES += "ssh-server-openssh"
 
 IMAGE_INSTALL:append = " \
     docker \
-    docker-compose \
     avahi-daemon \
     python3 \
     ha-grocy-openproject-stack \

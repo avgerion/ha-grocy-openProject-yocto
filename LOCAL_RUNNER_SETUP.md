@@ -43,7 +43,8 @@ sudo apt-get install -y \
     python3-pexpect xz-utils debianutils \
     iputils-ping wget ca-certificates \
     build-essential cpio time rsync \
-    bc xterm gcc g++ make
+    bc xterm gcc g++ make \
+    lz4 pzstd zstd
 ```
 
 #### On Fedora
@@ -52,7 +53,8 @@ sudo dnf groupinstall -y "Development Tools"
 sudo dnf install -y \
     git diffstat texinfo chrpath \
     socat python3 python3-pip \
-    python3-pexpect xz which SDL-devel curl
+    python3-pexpect xz which SDL-devel curl \
+    lz4 pzstd zstd
 ```
 
 #### On openSUSE
@@ -61,10 +63,35 @@ sudo zypper install -y \
     git diffstat texinfo chrpath \
     socat python3 python3-pip \
     python3-pexpect xz which cpio \
-    curl ca-certificates build-essential
+    curl ca-certificates build-essential \
+    lz4 pzstd zstd
 ```
 
-### 2. Install Docker and Docker Compose
+### 2. Configure System Locale
+
+BitBake requires a UTF-8 locale to be available. This is typically en_US.UTF-8 but C.utf8 is also acceptable.
+
+#### Check Available Locales
+```bash
+locale -a | grep -i utf
+```
+
+#### Generate en_US.UTF-8 (if not available)
+
+On Ubuntu/Debian:
+```bash
+sudo locale-gen en_US.UTF-8
+sudo update-locale LANG=en_US.UTF-8
+```
+
+On Fedora/RHEL:
+```bash
+sudo localedef -i en_US -f UTF-8 en_US.UTF-8
+```
+
+**Note for WSL2:** If locale generation fails in WSL2 (common in sandboxed environments), the build scripts will automatically fall back to C.utf8, which is equivalent for build purposes.
+
+### 3. Install Docker and Docker Compose
 
 The build produces a Docker Compose stack, so it's helpful to have Docker available for testing.
 
@@ -83,7 +110,7 @@ docker --version
 docker-compose --version
 ```
 
-### 3. (WSL Only) Configure WSL2 for Optimal Performance
+### 4. (WSL Only) Configure WSL2 for Optimal Performance
 
 Edit or create `~/.wslconfig` on Windows:
 
