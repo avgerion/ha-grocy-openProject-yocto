@@ -7,8 +7,8 @@ from urllib.parse import urlparse
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.components.zeroconf import ZeroconfServiceInfo
 from homeassistant.core import callback
+from zeroconf import ServiceInfo
 
 from .api import async_probe_stack
 from .const import (
@@ -46,7 +46,7 @@ class HomeOpsBridgeConfigFlow(config_entries.ConfigFlow):
         """Get options flow for this handler."""
         return HomeOpsBridgeOptionsFlow(config_entry)
 
-    async def async_step_zeroconf(self, discovery_info: ZeroconfServiceInfo):
+    async def async_step_zeroconf(self, discovery_info: ServiceInfo):
         """Handle zeroconf discovery."""
         host = discovery_info.host
         self._discovered_input = {
