@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, callback
 
+from .config_flow import HomeOpsBridgeConfigFlow
 from .coordinator import HomeOpsBridgeCoordinator
 from .const import DOMAIN
 from .proxy import async_proxy_grocy, async_proxy_openproject
