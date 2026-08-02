@@ -11,10 +11,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant, callback
 
-from .config_flow import HomeOpsBridgeConfigFlow
-from .coordinator import HomeOpsBridgeCoordinator
-from .const import DOMAIN
-from .proxy import async_proxy_grocy, async_proxy_openproject
+from custom_components.home_ops_bridge.config_flow import HomeOpsBridgeConfigFlow
+from custom_components.home_ops_bridge.coordinator import HomeOpsBridgeCoordinator
+from custom_components.home_ops_bridge.const import DOMAIN
+from custom_components.home_ops_bridge.proxy import async_proxy_grocy, async_proxy_openproject
 
 LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.SENSOR]
