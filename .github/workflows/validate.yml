@@ -35,7 +35,7 @@ jobs:
         run: |
           python -c "
           import json
-          with open('manifest.json') as f:
+          with open('custom_components/home_ops_bridge/manifest.json') as f:
               manifest = json.load(f)
           required_fields = ['domain', 'name', 'version', 'codeowners']
           for field in required_fields:
@@ -52,28 +52,28 @@ jobs:
           required_fields = ['name', 'content_in_root']
           for field in required_fields:
               assert field in hacs, f'Missing required field in hacs.json: {field}'
-          assert hacs['content_in_root'] == True, 'content_in_root must be true for root-level integration files'
+          assert hacs['content_in_root'] == False, 'content_in_root must be false for standard HACS structure'
           print(f'✓ HACS config valid: {hacs[\"name\"]}')
           "
       
       - name: Check Python syntax
         run: |
-          python -m py_compile __init__.py api.py config_flow.py const.py coordinator.py proxy.py sensor.py
+          python -m py_compile custom_components/home_ops_bridge/__init__.py custom_components/home_ops_bridge/api.py custom_components/home_ops_bridge/config_flow.py custom_components/home_ops_bridge/const.py custom_components/home_ops_bridge/coordinator.py custom_components/home_ops_bridge/proxy.py custom_components/home_ops_bridge/sensor.py
           echo "✓ All Python files compile successfully"
       
       - name: Verify file structure
         run: |
           required_files=(
-            "__init__.py"
-            "config_flow.py"
-            "api.py"
-            "proxy.py"
-            "coordinator.py"
-            "sensor.py"
-            "const.py"
-            "manifest.json"
-            "strings.json"
-            "translations/en.json"
+            "custom_components/home_ops_bridge/__init__.py"
+            "custom_components/home_ops_bridge/config_flow.py"
+            "custom_components/home_ops_bridge/api.py"
+            "custom_components/home_ops_bridge/proxy.py"
+            "custom_components/home_ops_bridge/coordinator.py"
+            "custom_components/home_ops_bridge/sensor.py"
+            "custom_components/home_ops_bridge/const.py"
+            "custom_components/home_ops_bridge/manifest.json"
+            "custom_components/home_ops_bridge/strings.json"
+            "custom_components/home_ops_bridge/translations/en.json"
             "www/grocy-card.js"
             "www/openproject-card.js"
             "hacs.json"
