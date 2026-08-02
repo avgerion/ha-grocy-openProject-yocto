@@ -33,9 +33,10 @@ def _normalize_url(url: str) -> str:
     return f"{parsed.scheme}://{parsed.netloc}".rstrip("/")
 
 
-class HomeOpsBridgeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class HomeOpsBridgeConfigFlow(config_entries.ConfigFlow):
     """Handle a config flow for Home Ops Bridge."""
 
+    domain = DOMAIN
     VERSION = 1
     _discovered_input: dict[str, str] | None = None
 
