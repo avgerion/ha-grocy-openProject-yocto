@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       
@@ -131,9 +131,8 @@ jobs:
         run: |
           required_docs=(
             "README.md"
-            "SETUP_GUIDE.md"
-            "LOCAL_RUNNER_SETUP.md"
-            "CI_CD_GUIDE.md"
+            "custom_components/home_ops_bridge/SETUP_GUIDE.md"
+            "custom_components/home_ops_bridge/CI_CD_GUIDE.md"
           )
           for doc in "${required_docs[@]}"; do
               if [ ! -f "$doc" ]; then
