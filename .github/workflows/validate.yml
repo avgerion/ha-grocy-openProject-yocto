@@ -43,9 +43,22 @@ jobs:
           print(f'✓ Manifest valid: {manifest[\"name\"]} v{manifest[\"version\"]}')
           "
       
+      - name: Validate hacs.json
+        run: |
+          python -c "
+          import json
+          with open('hacs.json') as f:
+              hacs = json.load(f)
+          required_fields = ['name', 'content_in_root']
+          for field in required_fields:
+              assert field in hacs, f'Missing required field in hacs.json: {field}'
+          assert hacs['content_in_root'] == False, 'content_in_root must be false for standard HACS structure'
+          print(f'✓ HACS config valid: {hacs[\"name\"]}')
+          "
+      
       - name: Check Python syntax
         run: |
-          python -m py_compile custom_components/home_ops_bridge/*.py
+          python -m py_compile custom_components/home_ops_bridge/__init__.py custom_components/home_ops_bridge/api.py custom_components/home_ops_bridge/config_flow.py custom_components/home_ops_bridge/const.py custom_components/home_ops_bridge/coordinator.py custom_components/home_ops_bridge/proxy.py custom_components/home_ops_bridge/sensor.py
           echo "✓ All Python files compile successfully"
       
       - name: Verify file structure
@@ -59,11 +72,16 @@ jobs:
             "custom_components/home_ops_bridge/sensor.py"
             "custom_components/home_ops_bridge/const.py"
             "custom_components/home_ops_bridge/manifest.json"
+            "custom_components/home_ops_bridge/strings.json"
+            "custom_components/home_ops_bridge/translations/en.json"
             "www/grocy-card.js"
             "www/openproject-card.js"
+            "hacs.json"
+            "brand/icon.png"
+            "README.md"
           )
           for file in "${required_files[@]}"; do
-              if [ ! -f "custom_components/home_ops_bridge/$file" ] && [ ! -f "$file" ]; then
+              if [ ! -f "$file" ]; then
                   echo "✗ Missing: $file"
                   exit 1
               fi
