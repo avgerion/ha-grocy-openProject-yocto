@@ -12,8 +12,8 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN
-from .coordinator import HomeOpsBridgeCoordinator
+from custom_components.home_ops_bridge.const import DOMAIN
+from custom_components.home_ops_bridge.coordinator import HomeOpsBridgeCoordinator
 
 
 async def async_setup_entry(

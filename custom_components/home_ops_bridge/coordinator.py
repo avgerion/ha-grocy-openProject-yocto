@@ -10,8 +10,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .api import async_probe_stack
-from .const import DEFAULT_SCAN_INTERVAL_SECONDS
+from custom_components.home_ops_bridge.api import async_probe_stack
+from custom_components.home_ops_bridge.const import DEFAULT_SCAN_INTERVAL_SECONDS
 
 LOGGER = logging.getLogger(__name__)
 

@@ -10,8 +10,8 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from zeroconf import ServiceInfo
 
-from .api import async_probe_stack
-from .const import (
+from custom_components.home_ops_bridge.api import async_probe_stack
+from custom_components.home_ops_bridge.const import (
     CONF_API_TOKEN,
     CONF_GROCY_URL,
     CONF_OPENPROJECT_URL,

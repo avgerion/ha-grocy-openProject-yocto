@@ -11,7 +11,7 @@ from aiohttp import ClientError, ClientTimeout
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .const import (
+from custom_components.home_ops_bridge.const import (
     CONF_GROCY_URL,
     CONF_OPENPROJECT_URL,
     DEFAULT_REQUEST_TIMEOUT_SECONDS,
