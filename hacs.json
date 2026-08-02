@@ -1,0 +1,8 @@
+{
+  "name": "Home Ops Bridge",
+  "homeassistant": "2024.1.0",
+  "hacs": "1.32.0",
+  "documentation": "https://github.com/avgerion/ha-grocy-openProject-yocto",
+  "issue_tracker": "https://github.com/avgerion/ha-grocy-openProject-yocto/issues",
+  "requirements": []
+}

@@ -61,9 +61,11 @@ jobs:
             "custom_components/home_ops_bridge/manifest.json"
             "www/grocy-card.js"
             "www/openproject-card.js"
+            "hacs.json"
+            "brand/icon.png"
           )
           for file in "${required_files[@]}"; do
-              if [ ! -f "custom_components/home_ops_bridge/$file" ] && [ ! -f "$file" ]; then
+              if [ ! -f "$file" ]; then
                   echo "✗ Missing: $file"
                   exit 1
               fi
